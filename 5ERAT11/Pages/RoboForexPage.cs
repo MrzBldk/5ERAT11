@@ -1,13 +1,14 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using SeleniumExtras.WaitHelpers;
+using _5ERAT11.Utils;
 
 namespace _5ERAT11.Pages
 {
     public class RoboForexPage:AbstractPage
     {
         public IWebElement Body => _wait.Until(_driver => _driver.FindElement(By.CssSelector("body")));
-        public IWebElement AllowCockiesButton => _wait.Until(_driver => _driver.FindElement(By.Id("AllowCookies_Allow_ViewButton")));
+        public IWebElement AllowCookiesButton => _wait.Until(_driver => _driver.FindElement(By.Id("AllowCookies_Allow_ViewButton")));
         public IWebElement LoginInput => _wait.Until(_driver => _driver.FindElement(By.XPath("//input[contains(@type,'email')]")));
         public IWebElement PasswordInput => _wait.Until(_driver => _driver.FindElement(By.XPath("//input[contains(@type,'password')]")));
         public IWebElement LoginButton => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".authentication-form__button > .button")));
@@ -42,20 +43,25 @@ namespace _5ERAT11.Pages
         public RoboForexPage OpenPage()
         {
             _driver.Navigate().GoToUrl("https://webtrader.roboforex.com/");
+            Log.Info("Page opened");
             return this;
         }
 
-        public RoboForexPage AllowCockies()
+        public RoboForexPage AllowCookies()
         {
-            AllowCockiesButton.Click();
+            AllowCookiesButton.Click();
+            Log.Info("Cookies allowed");
             return this;
         }
 
         public RoboForexPage Login(string login, string password)
         {
             LoginInput.SendKeys(login);
+            Log.Info("Email entered");
             PasswordInput.SendKeys(password);
+            Log.Info("Password Inputed");
             LoginButton.Click();
+            Log.Info("Loged in");
             return this;
         }
 
@@ -65,6 +71,7 @@ namespace _5ERAT11.Pages
             QuickDealInput.SendKeys(Keys.Backspace);
             QuickDealInput.SendKeys(amount);
             QuickSellButton.Click();
+            Log.Info("BTC sold");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__side.grid__cell > .grid__side-wrap.grid__wrap-in"), "Sell"));
             return this;
         }
@@ -75,6 +82,7 @@ namespace _5ERAT11.Pages
             QuickDealInput.SendKeys(Keys.Backspace);
             QuickDealInput.SendKeys(amount);
             QuickBuyButton.Click();
+            Log.Info("BTC bought");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__side.grid__cell > .grid__side-wrap.grid__wrap-in"), "Buy"));
             return this;
         }
@@ -83,6 +91,7 @@ namespace _5ERAT11.Pages
         {
             Positions.Click();
             CloseAllButton.Click();
+            Log.Info("All positions closed");
             _wait.Until(driver =>
             {
                 IWebElement tempElement = _driver.FindElement(By.CssSelector("#positions-tab > div.items-counter > span"));
@@ -95,15 +104,20 @@ namespace _5ERAT11.Pages
         {
             Actions actions = new Actions(_driver);
             actions.ContextClick(Canvas).Perform();
+            Log.Info("Context menu opened");
             ColorChandgeButton.Click();
+            Log.Info("Color Scheme changed");
             Body.Click();
+            Log.Info("Context menu closed");
             return this;
         }
 
         public RoboForexPage ChangeLanguageToRussian()
         {
             LanguageSelector.Click();
+            Log.Info("Language selector opened");
             RussianLanguageSelector.Click();
+            Log.Info("Language Changed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".modal-window__title"), "Авторизация"));
             return this;
         }
@@ -111,6 +125,7 @@ namespace _5ERAT11.Pages
         {
             PendingOrders.Click();
             NewOrderButton.Click();
+            Log.Info("Modal Window opened");
             return this;
         }
         public RoboForexPage CreateSellStopOrder()
@@ -121,7 +136,9 @@ namespace _5ERAT11.Pages
                 PendingOrderInput.SendKeys(Keys.Backspace);
             PendingOrderInput.SendKeys("1");
             PendingOrderButton.Click();
+            Log.Info("Pending order opened");
             CloseWindowButton.Click();
+            Log.Info("Modal window closed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Sell Stop"));
             return this;
         }
@@ -134,7 +151,9 @@ namespace _5ERAT11.Pages
                 PendingOrderInput.SendKeys(Keys.Backspace);
             PendingOrderInput.SendKeys("9999999");
             PendingOrderButton.Click();
+            Log.Info("Pending order opened");
             CloseWindowButton.Click();
+            Log.Info("Modal window closed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Buy Stop"));
             return this;
         }
@@ -147,7 +166,9 @@ namespace _5ERAT11.Pages
                 PendingOrderInput.SendKeys(Keys.Backspace);
             PendingOrderInput.SendKeys("9999999");
             PendingOrderButton.Click();
+            Log.Info("Pending order opened");
             CloseWindowButton.Click();
+            Log.Info("Modal window closed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Sell Limit"));
             return this;
         }
@@ -160,7 +181,9 @@ namespace _5ERAT11.Pages
                 PendingOrderInput.SendKeys(Keys.Backspace);
             PendingOrderInput.SendKeys("1");
             PendingOrderButton.Click();
+            Log.Info("Pending order opened");
             CloseWindowButton.Click();
+            Log.Info("Modal window closed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Buy Limit"));
             return this;
         }

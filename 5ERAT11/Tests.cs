@@ -26,7 +26,7 @@ namespace _5ERAT11
             User testUser = UserCreator.WithCredentialsFromProperty();
             _page = new RoboForexPage(_driver).
                 OpenPage().
-                AllowCockies().
+                AllowCookies().
                 Login(testUser.Email, testUser.Password);
         }
 
