@@ -2,10 +2,11 @@
 using OpenQA.Selenium.Interactions;
 using SeleniumExtras.WaitHelpers;
 using _5ERAT11.Utils;
+using _5ERAT11.Elements;
 
 namespace _5ERAT11.Pages
 {
-    public class RoboForexPage:AbstractPage
+    public class RoboForexPage : AbstractPage
     {
         public IWebElement Body => _wait.Until(_driver => _driver.FindElement(By.CssSelector("body")));
         public IWebElement AllowCookiesButton => _wait.Until(_driver => _driver.FindElement(By.Id("AllowCookies_Allow_ViewButton")));
@@ -25,43 +26,34 @@ namespace _5ERAT11.Pages
         public IWebElement LanguageSelector => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".lang-selector")));
         public IWebElement RussianLanguageSelector => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".drop-down__item_lang_ru")));
         public IWebElement ModalWindowTitle => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".modal-window__title")));
-        public IWebElement NewOrderButton => _wait.Until(_driver => _driver.FindElement(By.Id("new-order_ViewButton")));
-        public IWebElement SellStopButton => _wait.Until(_driver => _driver.FindElement(By.XPath("//div[text()='Sell Stop']")));
-        public IWebElement BuyStopButton => _wait.Until(_driver => _driver.FindElement(By.XPath("//div[text()='Buy Stop']")));
-        public IWebElement SellLimitButton => _wait.Until(_driver => _driver.FindElement(By.XPath("//div[text()='Sell Limit']")));
-        public IWebElement BuyLimitButton => _wait.Until(_driver => _driver.FindElement(By.XPath("//div[text()='Buy Limit']")));
-        public IWebElement PendingOrderButton => _wait.Until(_driver => _driver.FindElement(By.Id("PendingOrder_OpenOrder_ViewButton")));
-        public IWebElement CloseWindowButton => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".modal-window__close")));
-        public IWebElement PendingOrders => _wait.Until(_driver => _driver.FindElements(By.CssSelector(".tabs__item"))[2]);
         public IWebElement Positions => _wait.Until(_driver => _driver.FindElement(By.Id("positions-tab")));
-        public IWebElement PendingOrderType => _wait.Until(_driver => _driver.FindElement(By.CssSelector(".grid__body .grid__row .grid__type-wrap")));
-        public IWebElement PendingOrderInput => _wait.Until(_driver => _driver.FindElement(By.Id("PendingOrder_NumberInput_InputView")));
 
 
-        public RoboForexPage(IWebDriver driver) : base(driver) { }
+        public CreateOrderModalWindow CreateOrderModalWindow;
+
+
+        public RoboForexPage(IWebDriver driver) : base(driver)
+        {
+            CreateOrderModalWindow = new CreateOrderModalWindow(driver);
+        }
 
         public RoboForexPage OpenPage()
         {
             _driver.Navigate().GoToUrl("https://webtrader.roboforex.com/");
-            Log.Info("Page opened");
             return this;
         }
 
         public RoboForexPage AllowCookies()
         {
             AllowCookiesButton.Click();
-            Log.Info("Cookies allowed");
             return this;
         }
 
         public RoboForexPage Login(string login, string password)
         {
             LoginInput.SendKeys(login);
-            Log.Info("Email entered");
             PasswordInput.SendKeys(password);
-            Log.Info("Password Inputed");
             LoginButton.Click();
-            Log.Info("Loged in");
             return this;
         }
 
@@ -119,72 +111,6 @@ namespace _5ERAT11.Pages
             RussianLanguageSelector.Click();
             Log.Info("Language Changed");
             _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".modal-window__title"), "Авторизация"));
-            return this;
-        }
-        public RoboForexPage CreateOrder()
-        {
-            PendingOrders.Click();
-            NewOrderButton.Click();
-            Log.Info("Modal Window opened");
-            return this;
-        }
-        public RoboForexPage CreateSellStopOrder()
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", SellStopButton);
-            for (var i = 0; i < 10; i++)
-                PendingOrderInput.SendKeys(Keys.Backspace);
-            PendingOrderInput.SendKeys("1");
-            PendingOrderButton.Click();
-            Log.Info("Pending order opened");
-            CloseWindowButton.Click();
-            Log.Info("Modal window closed");
-            _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Sell Stop"));
-            return this;
-        }
-
-        public RoboForexPage CreateBuyStopOrder()
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", BuyStopButton);
-            for (var i = 0; i < 10; i++)
-                PendingOrderInput.SendKeys(Keys.Backspace);
-            PendingOrderInput.SendKeys("9999999");
-            PendingOrderButton.Click();
-            Log.Info("Pending order opened");
-            CloseWindowButton.Click();
-            Log.Info("Modal window closed");
-            _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Buy Stop"));
-            return this;
-        }
-
-        public RoboForexPage CreateSellLimitOrder()
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", SellLimitButton);
-            for (var i = 0; i < 10; i++)
-                PendingOrderInput.SendKeys(Keys.Backspace);
-            PendingOrderInput.SendKeys("9999999");
-            PendingOrderButton.Click();
-            Log.Info("Pending order opened");
-            CloseWindowButton.Click();
-            Log.Info("Modal window closed");
-            _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Sell Limit"));
-            return this;
-        }
-
-        public RoboForexPage CreateBuyLimitOrder()
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", BuyLimitButton);
-            for (var i = 0; i < 10; i++)
-                PendingOrderInput.SendKeys(Keys.Backspace);
-            PendingOrderInput.SendKeys("1");
-            PendingOrderButton.Click();
-            Log.Info("Pending order opened");
-            CloseWindowButton.Click();
-            Log.Info("Modal window closed");
-            _wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.CssSelector(".grid__body .grid__row .grid__type-wrap"), "Buy Limit"));
             return this;
         }
     }

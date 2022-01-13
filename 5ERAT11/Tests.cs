@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using _5ERAT11.Models;
@@ -78,38 +73,66 @@ namespace _5ERAT11
         }
 
         [Test]
-        public void ChangeLanguageTest()
+        public void ChangeLanguageToRussianTest()
         {
             _page.ChangeLanguageToRussian();
             Assert.That(_page.ModalWindowTitle.Text, Is.EqualTo("Авторизация"));
         }
 
         [Test]
-        public void CreateSellStopOrderTest()
+        [TestCase("1")]
+        public void CreateBTCSellStopOrderTest(string price)
         {
-            _page.CreateOrder().CreateSellStopOrder();
-            Assert.That(_page.PendingOrderType.Text, Is.EqualTo("Sell Stop"));
+            _page.CreateOrderModalWindow.OpenOrderCreatingWindow().CreateSellStopOrder(price);
+            string expectedOrderPrice = price.ConvertOrderSizeToRoboForexFormat();
+            Assert.Multiple(() =>
+            {
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderType.Text, Is.EqualTo("Sell Stop"));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderPrice.Text, Is.EqualTo(expectedOrderPrice));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderSymbol.Text, Is.EqualTo("BTCUSD"));
+            });
         }
 
         [Test]
-        public void CreateBuyStopOrderTest()
+        [TestCase("9999999")]
+        public void CreateBTCBuyStopOrderTest(string price)
         {
-            _page.CreateOrder().CreateBuyStopOrder();
-            Assert.That(_page.PendingOrderType.Text, Is.EqualTo("Buy Stop"));
+            _page.CreateOrderModalWindow.OpenOrderCreatingWindow().CreateBuyStopOrder(price);
+            string expectedOrderPrice = price.ConvertOrderSizeToRoboForexFormat();
+            Assert.Multiple(() =>
+            {
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderType.Text, Is.EqualTo("Buy Stop"));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderPrice.Text, Is.EqualTo(expectedOrderPrice));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderSymbol.Text, Is.EqualTo("BTCUSD"));
+            });
         }
 
         [Test]
-        public void CreateSellLimitOrderTest()
+        [TestCase("9999999")]
+        public void CreateBTCSellLimitOrderTest(string price)
         {
-            _page.CreateOrder().CreateSellLimitOrder();
-            Assert.That(_page.PendingOrderType.Text, Is.EqualTo("Sell Limit"));
+            _page.CreateOrderModalWindow.OpenOrderCreatingWindow().CreateSellLimitOrder(price);
+            string expectedOrderPrice = price.ConvertOrderSizeToRoboForexFormat();
+            Assert.Multiple(() =>
+            {
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderType.Text, Is.EqualTo("Sell Limit"));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderPrice.Text, Is.EqualTo(expectedOrderPrice));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderSymbol.Text, Is.EqualTo("BTCUSD"));
+            });
         }
 
         [Test]
-        public void CreateBuyLimitOrderTest()
+        [TestCase("1")]
+        public void CreateBTCBuyLimitOrderTest(string price)
         {
-            _page.CreateOrder().CreateBuyLimitOrder();
-            Assert.That(_page.PendingOrderType.Text, Is.EqualTo("Buy Limit"));
+            _page.CreateOrderModalWindow.OpenOrderCreatingWindow().CreateBuyLimitOrder(price);
+            string expectedOrderPrice = price.ConvertOrderSizeToRoboForexFormat();
+            Assert.Multiple(() =>
+            {
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderType.Text, Is.EqualTo("Buy Limit"));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderPrice.Text, Is.EqualTo(expectedOrderPrice));
+                Assert.That(_page.CreateOrderModalWindow.PendingOrderSymbol.Text, Is.EqualTo("BTCUSD"));
+            });
         }
 
         [TearDown]

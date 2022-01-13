@@ -171,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Driver\DriverInstance.cs" />
+    <Compile Include="Elements\Abstractelement.cs" />
+    <Compile Include="Elements\CreateOrderModalWindow.cs" />
     <Compile Include="Models\Browser.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\User.cs" />
